@@ -1,0 +1,5 @@
+- Criar layout do app
+- Estilizar o app
+- Implementar as funcionalidades
+  - 
+- Implementar componente CircularProgressBar
