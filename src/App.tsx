@@ -5,6 +5,8 @@ import Play from './assets/play.svg'
 import Stop from './assets/stop.svg'
 import Pause from './assets/pause.svg'
 
+import IconButton from './components/IconButton'
+
 import './App.scss'
 
 type InitialState = 'INITIAL'
@@ -49,42 +51,18 @@ const App: React.FC = () => {
 
   const renderActions = useCallback(() => {
     const playButton = (
-      <button
+      <IconButton
         key="play"
-        type="button"
-        className="action-container"
-        onClick={handleStart}
-      >
-        <span className="action-label">
-          <img src={Play} alt="Play icon" />
-        </span>
-      </button>
+        icon={Play}
+        onClick={state === 'INITIAL' ? handleStart : handleResume}
+      />
     )
 
     const stopButton = (
-      <button
-        key="stop"
-        type="button"
-        className="action-container"
-        onClick={handleStart}
-      >
-        <span className="action-label">
-          <img src={Stop} alt="Stop icon" />
-        </span>
-      </button>
+      <IconButton key="stop" icon={Stop} onClick={handleStop} />
     )
-
     const pauseButton = (
-      <button
-        key="pause"
-        type="button"
-        className="action-container"
-        onClick={handleStart}
-      >
-        <span className="action-label">
-          <img src={Pause} alt="Pause icon" />
-        </span>
-      </button>
+      <IconButton key="pause" icon={Pause} onClick={handlePause} />
     )
 
     switch (state) {
@@ -110,14 +88,7 @@ const App: React.FC = () => {
           <div className="progress">25:00</div>
         </div>
 
-        <div id="actions-container">
-          {renderActions()}
-          {/* <button type="button" className="action-container">
-            <span className="action-label">
-              <img src={Stop} alt="Stop icon" />
-            </span>
-          </button> */}
-        </div>
+        <div id="actions-container">{renderActions()}</div>
 
         <form id="inputs-container">
           <fieldset className="input-container">
