@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import Logo from './assets/logo.svg'
 import Play from './assets/play.svg'
@@ -6,8 +6,10 @@ import Stop from './assets/stop.svg'
 import Pause from './assets/pause.svg'
 
 import IconButton from './components/IconButton'
+import formatNumberToString from './utils/formatNumber'
 
 import './App.scss'
+import useTimer from './hooks/useTimer'
 
 type InitialState = 'INITIAL'
 type InProgressState = 'IN_PROGRESS'
@@ -23,7 +25,7 @@ const App: React.FC = () => {
 
   const [state, setState] = useState<AppState>(defaultState)
 
-  const [time, setTime] = useState()
+  const { time, startTimer } = useTimer()
 
   function handleWorkingTime(value: number) {
     setWorkingTime(value)
@@ -35,6 +37,11 @@ const App: React.FC = () => {
 
   function handleStart() {
     setState('IN_PROGRESS')
+
+    startTimer({
+      minute: workingTime,
+      second: 0,
+    })
   }
 
   function handlePause() {
@@ -77,6 +84,20 @@ const App: React.FC = () => {
     }
   }, [state])
 
+  const renderTime = useCallback(() => {
+    const parsedTime = time ?? {
+      minute: workingTime,
+      second: 0,
+    }
+
+    const parsedMinute = formatNumberToString(parsedTime.minute)
+    const parsedSecond = formatNumberToString(parsedTime.second)
+
+    return `${parsedMinute}:${parsedSecond}`
+  }, [time, workingTime])
+
+  console.log(state, time)
+
   return (
     <main id="main-container">
       <div className="content">
@@ -85,7 +106,7 @@ const App: React.FC = () => {
         </div>
 
         <div id="progress-container">
-          <div className="progress">25:00</div>
+          <div className="progress">{renderTime()}</div>
         </div>
 
         <div id="actions-container">{renderActions()}</div>
