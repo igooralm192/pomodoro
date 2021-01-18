@@ -1,0 +1,28 @@
+#main-container {
+  height: 100%;
+
+  & > .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    & > div:not(:first-child) {
+      margin-top: 30px;
+    }
+  }
+}
+
+
+#logo-container {
+}
+
+#progress-container {
+  height: 300px;
+}
+
+#actions-container {
+}
+
+#sliders-container {
+}
