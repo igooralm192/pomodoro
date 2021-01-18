@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
 
-    & > div:not(:first-child) {
+    & > :not(:first-child) {
       margin-top: 30px;
     }
   }
@@ -61,5 +61,26 @@
   }
 }
 
-#sliders-container {
+#inputs-container {
+  display: flex;
+  flex-direction: column;
+
+  & > .input-container {
+    display: flex;
+    flex-direction: column;
+
+    width: 300px;
+    margin-bottom: 15px;
+
+    border: none;
+
+    & > label {
+      font-family: 'Nunito', 'Ubuntu', 'Arial', sans-serif;
+      font-size: 18px;
+    }
+
+    & > input {
+      width: 100%;
+    }
+  }
 }

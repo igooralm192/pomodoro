@@ -31,20 +31,17 @@ const App: React.FC = () => {
           </button>
         </div>
 
-        <div id="sliders-container">
-          <div className="slider-container">
-            <label htmlFor="working-input">
-              Trabalho
-              <input id="working-input" type="text" />
-            </label>
-          </div>
-          <div className="slider-container">
-            <label htmlFor="break-input">
-              Descanso
-              <input id="break-input" type="text" />
-            </label>
-          </div>
-        </div>
+        <form id="inputs-container">
+          <fieldset className="input-container">
+            <label htmlFor="working-input">Trabalho</label>
+            <input id="working-input" type="range" min={5} max={60} />
+          </fieldset>
+
+          <fieldset className="input-container">
+            <label htmlFor="break-input">Descanso</label>
+            <input id="break-input" type="range" min={1} max={20} />
+          </fieldset>
+        </form>
       </div>
     </main>
   )
