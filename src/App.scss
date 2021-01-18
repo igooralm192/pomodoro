@@ -18,7 +18,20 @@
 }
 
 #progress-container {
+  width: 300px;
   height: 300px;
+
+  border: 9px solid #99EAA1;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > .progress {
+    font-family: 'Nunito', 'Arial', sans-serif;
+    font-size: 38px;
+  }
 }
 
 #actions-container {
