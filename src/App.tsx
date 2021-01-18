@@ -1,7 +1,8 @@
 import React from 'react'
 
-import Logo from './assets/logo.png'
-import Play from './assets/play.png'
+import Logo from './assets/logo.svg'
+import Play from './assets/play.svg'
+import Stop from './assets/stop.svg'
 
 import './App.scss'
 
@@ -19,7 +20,14 @@ const App: React.FC = () => {
 
         <div id="actions-container">
           <button type="button" className="action-container">
-            <img src={Play} alt="Play icon" />
+            <span className="action-label">
+              <img src={Play} alt="Play icon" />
+            </span>
+          </button>
+          <button type="button" className="action-container">
+            <span className="action-label">
+              <img src={Stop} alt="Stop icon" />
+            </span>
           </button>
         </div>
 
