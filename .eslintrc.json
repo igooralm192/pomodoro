@@ -45,7 +45,8 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "jsx-a11y/label-has-associated-control": "off"
   },
   "settings": {
     "import/resolver": {
