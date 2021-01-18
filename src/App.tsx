@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import Logo from './assets/logo.svg'
 import Play from './assets/play.svg'
@@ -25,36 +25,47 @@ const App: React.FC = () => {
 
   const [state, setState] = useState<AppState>(defaultState)
 
-  const { time, startTimer } = useTimer()
+  const {
+    time: currentTime,
+    startTimer,
+    pauseTimer,
+    resumeTimer,
+    stopTimer,
+  } = useTimer()
 
   function handleWorkingTime(value: number) {
     setWorkingTime(value)
   }
 
   function handleBreakingTime(value: number) {
+    if (value > workingTime) setWorkingTime(value)
+
     setBreakingTime(value)
   }
 
-  function handleStart() {
+  const handleStart = useCallback(() => {
     setState('IN_PROGRESS')
 
     startTimer({
       minute: workingTime,
       second: 0,
     })
-  }
+  }, [workingTime, startTimer])
 
-  function handlePause() {
+  const handlePause = useCallback(() => {
     setState('PAUSED')
-  }
+    pauseTimer()
+  }, [pauseTimer])
 
-  function handleResume() {
+  const handleResume = useCallback(() => {
     setState('IN_PROGRESS')
-  }
+    resumeTimer()
+  }, [resumeTimer])
 
-  function handleStop() {
+  const handleStop = useCallback(() => {
     setState('INITIAL')
-  }
+    stopTimer()
+  }, [stopTimer])
 
   const renderActions = useCallback(() => {
     const playButton = (
@@ -82,21 +93,21 @@ const App: React.FC = () => {
       default:
         return playButton
     }
-  }, [state])
+  }, [state, handleStart, handlePause, handleResume, handleStop])
 
   const renderTime = useCallback(() => {
-    const parsedTime = time ?? {
+    const time = currentTime ?? {
       minute: workingTime,
       second: 0,
     }
 
-    const parsedMinute = formatNumberToString(parsedTime.minute)
-    const parsedSecond = formatNumberToString(parsedTime.second)
+    const parsedMinute = formatNumberToString(time.minute)
+    const parsedSecond = formatNumberToString(time.second)
 
     return `${parsedMinute}:${parsedSecond}`
-  }, [time, workingTime])
+  }, [currentTime, workingTime])
 
-  console.log(state, time)
+  console.log(state, currentTime)
 
   return (
     <main id="main-container">
@@ -121,9 +132,10 @@ const App: React.FC = () => {
             <input
               id="working-input"
               type="range"
-              min={5}
+              min={Math.max(5, breakingTime)}
               max={60}
               value={workingTime}
+              disabled={state !== 'INITIAL'}
               onChange={e => handleWorkingTime(Number(e.target.value))}
             />
           </fieldset>
@@ -140,6 +152,7 @@ const App: React.FC = () => {
               min={1}
               max={20}
               value={breakingTime}
+              disabled={state !== 'INITIAL'}
               onChange={e => handleBreakingTime(Number(e.target.value))}
             />
           </fieldset>

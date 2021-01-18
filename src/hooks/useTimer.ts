@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 interface Time {
   minute: number
@@ -8,6 +8,9 @@ interface Time {
 interface IReturn {
   time: Time | undefined
   startTimer: (time: Time) => void
+  pauseTimer: () => void
+  resumeTimer: () => void
+  stopTimer: () => void
 }
 
 const useTimer = (): IReturn => {
@@ -15,7 +18,7 @@ const useTimer = (): IReturn => {
 
   const [time, setTime] = useState<Time>()
 
-  function handleTime() {
+  const handleTime = useCallback(() => {
     setTime(oldTime => {
       if (!oldTime) return undefined
 
@@ -30,18 +33,47 @@ const useTimer = (): IReturn => {
 
       return newTime
     })
-  }
+  }, [])
 
   function startTimer(newTime: Time) {
-    const interval = setInterval(handleTime, 1000)
-    setIntervalRef(interval)
+    createIntervalRef()
 
     setTime(newTime)
   }
 
+  function pauseTimer() {
+    removeIntervalRef()
+  }
+
+  function resumeTimer() {
+    createIntervalRef()
+  }
+
+  function stopTimer() {
+    removeIntervalRef()
+
+    setTime(undefined)
+  }
+
+  const createIntervalRef = useCallback(() => {
+    const interval = setInterval(handleTime, 1000)
+    setIntervalRef(interval)
+  }, [handleTime])
+
+  const removeIntervalRef = useCallback(() => {
+    setIntervalRef(oldIntervalRef => {
+      if (oldIntervalRef) clearInterval(oldIntervalRef)
+
+      return undefined
+    })
+  }, [])
+
   return {
     time,
     startTimer,
+    pauseTimer,
+    resumeTimer,
+    stopTimer,
   }
 }
 
