@@ -9,15 +9,15 @@
 - [x] O usuário deve poder ver um cronômetro com tempo X, sendo X a sessão de trabalho ou descanso.
 - [x] O usuário deve poder iniciar, pausar e resetar o cronômetro.
 - [x] O usuário deve poder digitar/escolher quantos minutos irão durar os tempos X e Y.
-- [ ] Quando iniciado o cronômetro, o usuário deve poder visualizar o tempo decrescendo de X até 00:00.
-- [ ] Quando pausado o cronômetro, o usuário deve poder resumir a sessão.
-- [ ] Quando resetado o cronômetro, o usuário deve poder recomeçar a sessão.
+- [x] Quando iniciado o cronômetro, o usuário deve poder visualizar o tempo decrescendo de X até 00:00.
+- [x] Quando pausado o cronômetro, o usuário deve poder resumir a sessão.
+- [x] Quando resetado o cronômetro, o usuário deve poder recomeçar a sessão.
 
 #### Regras de negócio
 
-- [ ] O usuário não pode pausar o cronômetro durante a sessão de descanso.
-- [ ] `Y <= X`
-- [ ] `5 < X <= 60`
-- [ ] `1 < Y <= 20`
+- [x] O usuário não pode pausar o cronômetro durante a sessão de descanso.
+- [x] `Y <= X`
+- [x] `5 < X <= 60`
+- [x] `1 < Y <= 20`
 
 ---

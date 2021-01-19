@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import Logo from './assets/logo.svg'
 import Play from './assets/play.svg'
@@ -6,32 +6,32 @@ import Stop from './assets/stop.svg'
 import Pause from './assets/pause.svg'
 
 import IconButton from './components/IconButton'
+import useTimer, { TimerState } from './hooks/useTimer'
 import formatNumberToString from './utils/formatNumber'
 
 import './App.scss'
-import useTimer from './hooks/useTimer'
 
-type InitialState = 'INITIAL'
-type InProgressState = 'IN_PROGRESS'
-type PausedState = 'PAUSED'
-
-type AppState = InitialState | InProgressState | PausedState
-
-const defaultState: AppState = 'INITIAL'
+enum SessionState {
+  WORKING = 'WORKING',
+  BREAKING = 'BREAKING',
+}
 
 const App: React.FC = () => {
   const [workingTime, setWorkingTime] = useState(25)
   const [breakingTime, setBreakingTime] = useState(5)
 
-  const [state, setState] = useState<AppState>(defaultState)
-
   const {
     time: currentTime,
+    timerState,
     startTimer,
     pauseTimer,
     resumeTimer,
     stopTimer,
   } = useTimer()
+
+  const [sessionState, setSessionState] = useState<SessionState>(
+    SessionState.WORKING,
+  )
 
   function handleWorkingTime(value: number) {
     setWorkingTime(value)
@@ -44,8 +44,6 @@ const App: React.FC = () => {
   }
 
   const handleStart = useCallback(() => {
-    setState('IN_PROGRESS')
-
     startTimer({
       minute: workingTime,
       second: 0,
@@ -53,17 +51,15 @@ const App: React.FC = () => {
   }, [workingTime, startTimer])
 
   const handlePause = useCallback(() => {
-    setState('PAUSED')
     pauseTimer()
   }, [pauseTimer])
 
   const handleResume = useCallback(() => {
-    setState('IN_PROGRESS')
     resumeTimer()
   }, [resumeTimer])
 
   const handleStop = useCallback(() => {
-    setState('INITIAL')
+    setSessionState(SessionState.WORKING)
     stopTimer()
   }, [stopTimer])
 
@@ -72,7 +68,7 @@ const App: React.FC = () => {
       <IconButton
         key="play"
         icon={Play}
-        onClick={state === 'INITIAL' ? handleStart : handleResume}
+        onClick={timerState === TimerState.INITIAL ? handleStart : handleResume}
       />
     )
 
@@ -80,20 +76,34 @@ const App: React.FC = () => {
       <IconButton key="stop" icon={Stop} onClick={handleStop} />
     )
     const pauseButton = (
-      <IconButton key="pause" icon={Pause} onClick={handlePause} />
+      <IconButton
+        key="pause"
+        icon={Pause}
+        disabled={
+          timerState === TimerState.IN_PROGRESS && sessionState === 'BREAKING'
+        }
+        onClick={handlePause}
+      />
     )
 
-    switch (state) {
-      case 'IN_PROGRESS':
+    switch (timerState) {
+      case TimerState.IN_PROGRESS:
         return [stopButton, pauseButton]
 
-      case 'PAUSED':
+      case TimerState.PAUSED:
         return [stopButton, playButton]
 
       default:
         return playButton
     }
-  }, [state, handleStart, handlePause, handleResume, handleStop])
+  }, [
+    timerState,
+    sessionState,
+    handleStart,
+    handlePause,
+    handleResume,
+    handleStop,
+  ])
 
   const renderTime = useCallback(() => {
     const time = currentTime ?? {
@@ -107,7 +117,40 @@ const App: React.FC = () => {
     return `${parsedMinute}:${parsedSecond}`
   }, [currentTime, workingTime])
 
-  console.log(state, currentTime)
+  useEffect(() => {
+    if (!currentTime) return
+    if (currentTime.minute !== 0 || currentTime.second !== 0) return
+
+    console.log('CHEGOU EM 00:00')
+    // WORKING -> 00:00
+    switch (sessionState) {
+      case SessionState.WORKING:
+        setSessionState(SessionState.BREAKING)
+        stopTimer()
+        startTimer({
+          minute: breakingTime,
+          second: 0,
+        })
+        break
+      default:
+        setSessionState(SessionState.WORKING)
+        stopTimer()
+        startTimer({
+          minute: workingTime,
+          second: 0,
+        })
+        break
+    }
+  }, [
+    currentTime,
+    workingTime,
+    breakingTime,
+    startTimer,
+    stopTimer,
+    sessionState,
+  ])
+
+  console.log(timerState, sessionState, currentTime)
 
   return (
     <main id="main-container">
@@ -132,10 +175,10 @@ const App: React.FC = () => {
             <input
               id="working-input"
               type="range"
-              min={Math.max(5, breakingTime)}
+              min={Math.max(1, breakingTime)}
               max={60}
               value={workingTime}
-              disabled={state !== 'INITIAL'}
+              disabled={timerState !== TimerState.INITIAL}
               onChange={e => handleWorkingTime(Number(e.target.value))}
             />
           </fieldset>
@@ -152,7 +195,7 @@ const App: React.FC = () => {
               min={1}
               max={20}
               value={breakingTime}
-              disabled={state !== 'INITIAL'}
+              disabled={timerState !== TimerState.INITIAL}
               onChange={e => handleBreakingTime(Number(e.target.value))}
             />
           </fieldset>

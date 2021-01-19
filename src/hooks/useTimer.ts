@@ -1,4 +1,10 @@
-import { useCallback, useState } from 'react'
+import { useEffect, useState } from 'react'
+
+export enum TimerState {
+  INITIAL = 'INITIAL',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PAUSED = 'PAUSED',
+}
 
 interface Time {
   minute: number
@@ -7,6 +13,7 @@ interface Time {
 
 interface IReturn {
   time: Time | undefined
+  timerState: TimerState
   startTimer: (time: Time) => void
   pauseTimer: () => void
   resumeTimer: () => void
@@ -14,11 +21,10 @@ interface IReturn {
 }
 
 const useTimer = (): IReturn => {
-  const [intervalRef, setIntervalRef] = useState<NodeJS.Timeout>()
-
   const [time, setTime] = useState<Time>()
+  const [timerState, setTimerState] = useState<TimerState>(TimerState.INITIAL)
 
-  const handleTime = useCallback(() => {
+  function handleTime() {
     setTime(oldTime => {
       if (!oldTime) return undefined
 
@@ -33,43 +39,39 @@ const useTimer = (): IReturn => {
 
       return newTime
     })
-  }, [])
+  }
 
   function startTimer(newTime: Time) {
-    createIntervalRef()
-
     setTime(newTime)
+    setTimerState(TimerState.IN_PROGRESS)
   }
 
   function pauseTimer() {
-    removeIntervalRef()
+    setTimerState(TimerState.PAUSED)
   }
 
   function resumeTimer() {
-    createIntervalRef()
+    setTimerState(TimerState.IN_PROGRESS)
   }
 
   function stopTimer() {
-    removeIntervalRef()
-
     setTime(undefined)
+    setTimerState(TimerState.INITIAL)
   }
 
-  const createIntervalRef = useCallback(() => {
-    const interval = setInterval(handleTime, 1000)
-    setIntervalRef(interval)
-  }, [handleTime])
+  useEffect(() => {
+    let timeout: NodeJS.Timeout
 
-  const removeIntervalRef = useCallback(() => {
-    setIntervalRef(oldIntervalRef => {
-      if (oldIntervalRef) clearInterval(oldIntervalRef)
+    if (timerState === TimerState.IN_PROGRESS) {
+      timeout = setTimeout(handleTime, 1000)
+    }
 
-      return undefined
-    })
-  }, [])
+    return () => clearTimeout(timeout)
+  }, [time, timerState])
 
   return {
     time,
+    timerState,
     startTimer,
     pauseTimer,
     resumeTimer,

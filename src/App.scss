@@ -41,7 +41,12 @@
     background-color: #99eaa1;
     cursor: pointer;
 
-    &:hover {
+    &:disabled {
+      cursor: auto;
+      background-color: #def1e1;
+    }
+
+    &:hover:not(:disabled) {
       background-color: #90e098;
     }
 
