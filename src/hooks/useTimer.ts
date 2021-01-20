@@ -20,6 +20,8 @@ interface IReturn {
   stopTimer: () => void
 }
 
+const INTERVAL_TIME = 50
+
 const useTimer = (): IReturn => {
   const [time, setTime] = useState<Time>()
   const [timerState, setTimerState] = useState<TimerState>(TimerState.INITIAL)
@@ -63,7 +65,7 @@ const useTimer = (): IReturn => {
     let timeout: NodeJS.Timeout
 
     if (timerState === TimerState.IN_PROGRESS) {
-      timeout = setTimeout(handleTime, 1000)
+      timeout = setTimeout(handleTime, INTERVAL_TIME)
     }
 
     return () => clearTimeout(timeout)

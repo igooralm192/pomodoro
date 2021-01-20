@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import Logo from './assets/logo.svg'
 import Play from './assets/play.svg'
-import Stop from './assets/stop.svg'
 import Pause from './assets/pause.svg'
+import Stop from './assets/stop.svg'
+import Reset from './assets/reset.svg'
 
 import IconButton from './components/IconButton'
 import useTimer, { TimerState } from './hooks/useTimer'
@@ -15,6 +16,8 @@ enum SessionState {
   WORKING = 'WORKING',
   BREAKING = 'BREAKING',
 }
+
+const TOTAL_SESSIONS = 4
 
 const App: React.FC = () => {
   const [workingTime, setWorkingTime] = useState(25)
@@ -32,6 +35,8 @@ const App: React.FC = () => {
   const [sessionState, setSessionState] = useState<SessionState>(
     SessionState.WORKING,
   )
+
+  const [sessionNumber, setSessionNumber] = useState<number>(1)
 
   function handleWorkingTime(value: number) {
     setWorkingTime(value)
@@ -63,6 +68,12 @@ const App: React.FC = () => {
     stopTimer()
   }, [stopTimer])
 
+  const handleReset = useCallback(() => {
+    setSessionState(SessionState.WORKING)
+    setSessionNumber(1)
+    stopTimer()
+  }, [stopTimer])
+
   const renderActions = useCallback(() => {
     const playButton = (
       <IconButton
@@ -75,6 +86,7 @@ const App: React.FC = () => {
     const stopButton = (
       <IconButton key="stop" icon={Stop} onClick={handleStop} />
     )
+
     const pauseButton = (
       <IconButton
         key="pause"
@@ -86,23 +98,37 @@ const App: React.FC = () => {
       />
     )
 
+    const resetButton = (
+      <IconButton key="reset" icon={Reset} onClick={handleReset} />
+    )
+
     switch (timerState) {
       case TimerState.IN_PROGRESS:
-        return [stopButton, pauseButton]
+        return [
+          stopButton,
+          pauseButton,
+          sessionNumber > 1 ? resetButton : undefined,
+        ]
 
       case TimerState.PAUSED:
-        return [stopButton, playButton]
+        return [
+          stopButton,
+          playButton,
+          sessionNumber > 1 ? resetButton : undefined,
+        ]
 
       default:
-        return playButton
+        return [playButton, sessionNumber > 1 ? resetButton : undefined]
     }
   }, [
     timerState,
     sessionState,
+    sessionNumber,
     handleStart,
     handlePause,
     handleResume,
     handleStop,
+    handleReset,
   ])
 
   const renderTime = useCallback(() => {
@@ -122,22 +148,41 @@ const App: React.FC = () => {
     if (currentTime.minute !== 0 || currentTime.second !== 0) return
 
     switch (sessionState) {
-      case SessionState.WORKING:
+      case SessionState.WORKING: {
         setSessionState(SessionState.BREAKING)
         stopTimer()
+
+        let newBreakingTime = breakingTime
+        if (sessionNumber === 4) {
+          newBreakingTime *= 2
+        }
+
         startTimer({
-          minute: breakingTime,
+          minute: newBreakingTime,
           second: 0,
         })
+
         break
-      default:
+      }
+
+      default: {
+        if (sessionNumber === TOTAL_SESSIONS) {
+          handleReset()
+
+          return
+        }
+
         setSessionState(SessionState.WORKING)
+        setSessionNumber(oldSessionNumber => oldSessionNumber + 1)
+
         stopTimer()
         startTimer({
           minute: workingTime,
           second: 0,
         })
+
         break
+      }
     }
   }, [
     currentTime,
@@ -146,9 +191,11 @@ const App: React.FC = () => {
     startTimer,
     stopTimer,
     sessionState,
+    sessionNumber,
+    handleReset,
   ])
 
-  console.log(timerState, sessionState, currentTime)
+  console.log(timerState, sessionState, sessionNumber, currentTime)
 
   return (
     <main id="main-container">
@@ -160,12 +207,18 @@ const App: React.FC = () => {
         <div id="progress-container">
           <div className="progress">
             <div className="session-timer">
-              <span className="type">Trabalho</span>
+              <span className="type">
+                {sessionState === SessionState.WORKING
+                  ? 'Trabalho'
+                  : 'Descanso'}
+              </span>
               <span className="timer">{renderTime()}</span>
             </div>
             <div className="session-count">
               <span className="title">Sessão</span>
-              <span className="number">1 / 4</span>
+              <span className="number">
+                {`${sessionNumber} / ${TOTAL_SESSIONS}`}
+              </span>
             </div>
           </div>
         </div>
@@ -185,7 +238,7 @@ const App: React.FC = () => {
               min={Math.max(1, breakingTime)}
               max={60}
               value={workingTime}
-              disabled={timerState !== TimerState.INITIAL}
+              disabled={sessionNumber > 1 || timerState !== TimerState.INITIAL}
               onChange={e => handleWorkingTime(Number(e.target.value))}
             />
           </fieldset>
@@ -202,7 +255,7 @@ const App: React.FC = () => {
               min={1}
               max={20}
               value={breakingTime}
-              disabled={timerState !== TimerState.INITIAL}
+              disabled={sessionNumber > 1 || timerState !== TimerState.INITIAL}
               onChange={e => handleBreakingTime(Number(e.target.value))}
             />
           </fieldset>
