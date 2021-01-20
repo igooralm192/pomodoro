@@ -6,15 +6,22 @@
 
 #### Requisitos funcionais
 
-- [x] O usuário deve poder ver um cronômetro com tempo X, sendo X a sessão de trabalho ou descanso.
-- [x] O usuário deve poder iniciar, pausar e resetar o cronômetro.
+- [x] O usuário deve poder ver um cronômetro, que mostra o tempo da sessão de trabalho ou de descanso.
 - [x] O usuário deve poder digitar/escolher quantos minutos irão durar os tempos X e Y.
-- [x] Quando iniciado o cronômetro, o usuário deve poder visualizar o tempo decrescendo de X até 00:00.
-- [x] Quando pausado o cronômetro, o usuário deve poder resumir a sessão.
-- [x] Quando resetado o cronômetro, o usuário deve poder recomeçar a sessão.
+- [x] O usuário deve poder iniciar, pausar ou parar o cronômetro.
+- [ ] O usuário deve poder visualizar a sessão atual, o tipo e o número total de sessões.
+- [ ] O usuário também deve poder resetar o cronômetro.
+
+#### Requisitos não-funcionais
+- [ ] Criar componente **CircularProgressBar** para a barra de progresso do cronômetro.
+- [ ] Criar componente **SliderInput** para os campos de entrada dos tempos de trabalho e descanso.
 
 #### Regras de negócio
-
+- [ ] Quando parado o cronômetro, o usuário reinicia somente a sessão atual.
+- [ ] Quando resetado o cronômetro, o usuário reinicia todas as sessões.
+- [ ] O número total de sessões sesmpre será quatro.
+- [ ] Na quarta sessão, o tempo de descanso deve ser o dobro do escolhido.
+- [ ] Após a quarta sessão, o cronômetro deve ser resetado.
 - [x] O usuário não pode pausar o cronômetro durante a sessão de descanso.
 - [x] `Y <= X`
 - [x] `5 < X <= 60`

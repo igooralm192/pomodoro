@@ -7,7 +7,7 @@ import Pause from './assets/pause.svg'
 
 import IconButton from './components/IconButton'
 import useTimer, { TimerState } from './hooks/useTimer'
-import formatNumberToString from './utils/formatNumber'
+import formatNumberToString from './utils/formatNumberToString'
 
 import './App.scss'
 
@@ -121,8 +121,6 @@ const App: React.FC = () => {
     if (!currentTime) return
     if (currentTime.minute !== 0 || currentTime.second !== 0) return
 
-    console.log('CHEGOU EM 00:00')
-    // WORKING -> 00:00
     switch (sessionState) {
       case SessionState.WORKING:
         setSessionState(SessionState.BREAKING)
