@@ -158,7 +158,16 @@ const App: React.FC = () => {
         </div>
 
         <div id="progress-container">
-          <div className="progress">{renderTime()}</div>
+          <div className="progress">
+            <div className="session-timer">
+              <span className="type">Trabalho</span>
+              <span className="timer">{renderTime()}</span>
+            </div>
+            <div className="session-count">
+              <span className="title">Sessão</span>
+              <span className="number">1 / 4</span>
+            </div>
+          </div>
         </div>
 
         <div id="actions-container">{renderActions()}</div>

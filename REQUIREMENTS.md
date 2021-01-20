@@ -19,7 +19,7 @@
 #### Regras de negócio
 - [ ] Quando parado o cronômetro, o usuário reinicia somente a sessão atual.
 - [ ] Quando resetado o cronômetro, o usuário reinicia todas as sessões.
-- [ ] O número total de sessões sesmpre será quatro.
+- [ ] O número total de sessões sempre será quatro.
 - [ ] Na quarta sessão, o tempo de descanso deve ser o dobro do escolhido.
 - [ ] Após a quarta sessão, o cronômetro deve ser resetado.
 - [x] O usuário não pode pausar o cronômetro durante a sessão de descanso.
