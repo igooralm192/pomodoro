@@ -30,6 +30,29 @@
   & > .progress {
     font-family: 'Nunito', 'Arial', sans-serif;
     font-size: 38px;
+    position: relative;
+
+    & > .session-timer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      & > .type {
+        font-size: 18px;
+      }
+    }
+
+    & > .session-count {
+      position: absolute;
+      margin-top: 15px;
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 16px;
+    }
   }
 }
 
@@ -41,7 +64,12 @@
     background-color: #99eaa1;
     cursor: pointer;
 
-    &:hover {
+    &:disabled {
+      cursor: auto;
+      background-color: #def1e1;
+    }
+
+    &:hover:not(:disabled) {
       background-color: #90e098;
     }
 
