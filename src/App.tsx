@@ -1,12 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import ReactSound from 'react-sound'
 
-import Logo from './assets/logo.svg'
-import Play from './assets/play.svg'
-import Pause from './assets/pause.svg'
-import Stop from './assets/stop.svg'
-import Reset from './assets/reset.svg'
+import Logo from './assets/images/logo.svg'
+import Play from './assets/images/play.svg'
+import Pause from './assets/images/pause.svg'
+import Stop from './assets/images/stop.svg'
+import Reset from './assets/images/reset.svg'
 
 import IconButton from './components/IconButton'
+import Alert from './components/Alert'
+
 import useTimer, { TimerState } from './hooks/useTimer'
 import formatNumberToString from './utils/formatNumberToString'
 
@@ -15,6 +18,12 @@ import './App.scss'
 enum SessionState {
   WORKING = 'WORKING',
   BREAKING = 'BREAKING',
+}
+
+enum PlayerState {
+  PLAYING = 'PLAYING',
+  STOPPED = 'STOPPED',
+  PAUSED = 'PAUSED',
 }
 
 const TOTAL_SESSIONS = 4
@@ -37,6 +46,12 @@ const App: React.FC = () => {
   )
 
   const [sessionNumber, setSessionNumber] = useState<number>(1)
+
+  // const [play, { isPlaying, stop }] = useSound('/sounds/alert.mp3')
+
+  const [playerState, setPlayerState] = useState<PlayerState>(
+    PlayerState.STOPPED,
+  )
 
   function handleWorkingTime(value: number) {
     setWorkingTime(value)
@@ -73,6 +88,36 @@ const App: React.FC = () => {
     setSessionNumber(1)
     stopTimer()
   }, [stopTimer])
+
+  const changeToWorkingSession = useCallback(() => {
+    if (sessionNumber === TOTAL_SESSIONS) {
+      handleReset()
+
+      return
+    }
+
+    setSessionState(SessionState.WORKING)
+    setSessionNumber(oldSessionNumber => oldSessionNumber + 1)
+
+    startTimer({
+      minute: workingTime,
+      second: 0,
+    })
+  }, [workingTime, sessionNumber, handleReset, startTimer])
+
+  const changeToBreakingSession = useCallback(() => {
+    setSessionState(SessionState.BREAKING)
+
+    let newBreakingTime = breakingTime
+    if (sessionNumber === 4) {
+      newBreakingTime *= 2
+    }
+
+    startTimer({
+      minute: newBreakingTime,
+      second: 0,
+    })
+  }, [breakingTime, sessionNumber, startTimer])
 
   const renderActions = useCallback(() => {
     const playButton = (
@@ -144,55 +189,22 @@ const App: React.FC = () => {
   }, [currentTime, workingTime])
 
   useEffect(() => {
-    if (!currentTime) return
-    if (currentTime.minute !== 0 || currentTime.second !== 0) return
+    if (timerState !== TimerState.FINISHED) return
 
     switch (sessionState) {
-      case SessionState.WORKING: {
-        setSessionState(SessionState.BREAKING)
-        stopTimer()
-
-        let newBreakingTime = breakingTime
-        if (sessionNumber === 4) {
-          newBreakingTime *= 2
-        }
-
-        startTimer({
-          minute: newBreakingTime,
-          second: 0,
-        })
-
+      case SessionState.WORKING:
+        changeToBreakingSession()
         break
-      }
 
-      default: {
-        if (sessionNumber === TOTAL_SESSIONS) {
-          handleReset()
-
-          return
-        }
-
-        setSessionState(SessionState.WORKING)
-        setSessionNumber(oldSessionNumber => oldSessionNumber + 1)
-
-        stopTimer()
-        startTimer({
-          minute: workingTime,
-          second: 0,
-        })
-
+      default:
+        changeToWorkingSession()
         break
-      }
     }
   }, [
-    currentTime,
-    workingTime,
-    breakingTime,
-    startTimer,
-    stopTimer,
+    timerState,
     sessionState,
-    sessionNumber,
-    handleReset,
+    changeToWorkingSession,
+    changeToBreakingSession,
   ])
 
   console.log(timerState, sessionState, sessionNumber, currentTime)
@@ -261,6 +273,17 @@ const App: React.FC = () => {
           </fieldset>
         </form>
       </div>
+
+      <Alert
+        title="Vai descansar!"
+        message="Já trabalhou demais fera, tá na hora de dar um descanso."
+        open
+        onClose={() => {
+          console.log('fechou')
+        }}
+      />
+
+      <ReactSound url="/sounds/alert.mp3" playStatus={playerState} />
     </main>
   )
 }

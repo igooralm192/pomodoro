@@ -4,6 +4,7 @@ export enum TimerState {
   INITIAL = 'INITIAL',
   IN_PROGRESS = 'IN_PROGRESS',
   PAUSED = 'PAUSED',
+  FINISHED = 'FINISHED',
 }
 
 interface Time {
@@ -29,6 +30,12 @@ const useTimer = (): IReturn => {
   function handleTime() {
     setTime(oldTime => {
       if (!oldTime) return undefined
+
+      if (oldTime.minute === 0 && oldTime.second === 0) {
+        setTimerState(TimerState.FINISHED)
+
+        return oldTime
+      }
 
       const newTime: Time = { ...oldTime }
 

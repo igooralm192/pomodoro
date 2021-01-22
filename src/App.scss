@@ -56,38 +56,7 @@
   }
 }
 
-#actions-container {
-  & > .action-container {
-    border: none;
-    border-radius: 50%;
-    padding: 20px;
-    background-color: #99eaa1;
-    cursor: pointer;
-
-    &:disabled {
-      cursor: auto;
-      background-color: #def1e1;
-    }
-
-    &:hover:not(:disabled) {
-      background-color: #90e098;
-    }
-
-    & > .action-label {
-      width: 100%;
-      display: flex;
-
-      & > img {
-        width: 24px;
-        height: 24px;
-      }
-    }
-  }
-
-  & > .action-container:not(:first-child) {
-    margin-left: 15px;
-  }
-}
+#actions-container {}
 
 #inputs-container {
   display: flex;

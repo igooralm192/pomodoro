@@ -47,7 +47,8 @@
       }
     ],
     "jsx-a11y/label-has-associated-control": "off",
-    "no-shadow": "off"
+    "no-shadow": "off",
+    "react/jsx-curly-newline": "off"
   },
   "settings": {
     "import/resolver": {

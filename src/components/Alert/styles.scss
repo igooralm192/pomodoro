@@ -1,0 +1,65 @@
+.alert-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // justify-content: center;
+  padding-top: 20px;
+}
+
+.alert-content {
+  width: 400px;
+  height: auto;
+  background-color: white;
+  padding: 15px 15px;
+  display: flex;
+  border: 2px solid #E6A23C;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+
+  & > .icon > img {
+    width: 40px;
+    height: 40px;
+    color: yellow;
+  }
+
+  & > .message {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  & > .close {
+    font-weight: bold;
+  }
+
+  & > :not(:first-child) {
+    margin-left: 15px;
+  }
+}
+
+.alert-content .message {
+  & > .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: -2px;
+    margin-bottom: 10px;
+    color: #E6A23C;
+  }
+}
+
+.alert-content .close {
+  & > button {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+}
