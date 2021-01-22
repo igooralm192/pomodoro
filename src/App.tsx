@@ -26,6 +26,12 @@ enum PlayerState {
   PAUSED = 'PAUSED',
 }
 
+interface AlertOptions {
+  open: boolean
+  title?: string
+  message?: string
+}
+
 const TOTAL_SESSIONS = 4
 
 const App: React.FC = () => {
@@ -52,6 +58,10 @@ const App: React.FC = () => {
   const [playerState, setPlayerState] = useState<PlayerState>(
     PlayerState.STOPPED,
   )
+
+  const [alertOptions, setAlertOptions] = useState<AlertOptions>({
+    open: false,
+  })
 
   function handleWorkingTime(value: number) {
     setWorkingTime(value)
@@ -188,8 +198,24 @@ const App: React.FC = () => {
     return `${parsedMinute}:${parsedSecond}`
   }, [currentTime, workingTime])
 
-  useEffect(() => {
-    if (timerState !== TimerState.FINISHED) return
+  function handleAlertOpen() {
+    const title =
+      sessionState === SessionState.WORKING
+        ? 'Vai descansar!'
+        : 'Hora de trabalhar!'
+
+    const message =
+      sessionState === SessionState.WORKING
+        ? 'Já ta na hora de descansar.'
+        : 'Já ta na hora de trabalhar.'
+
+    setPlayerState(PlayerState.PLAYING)
+    setAlertOptions({ open: true, title, message })
+  }
+
+  function handleAlertClose() {
+    setPlayerState(PlayerState.STOPPED)
+    setAlertOptions({ ...alertOptions, open: false })
 
     switch (sessionState) {
       case SessionState.WORKING:
@@ -200,12 +226,13 @@ const App: React.FC = () => {
         changeToWorkingSession()
         break
     }
-  }, [
-    timerState,
-    sessionState,
-    changeToWorkingSession,
-    changeToBreakingSession,
-  ])
+  }
+
+  useEffect(() => {
+    if (timerState !== TimerState.FINISHED) return
+
+    handleAlertOpen()
+  }, [timerState])
 
   console.log(timerState, sessionState, sessionNumber, currentTime)
 
@@ -275,12 +302,10 @@ const App: React.FC = () => {
       </div>
 
       <Alert
-        title="Vai descansar!"
-        message="Já trabalhou demais fera, tá na hora de dar um descanso."
-        open
-        onClose={() => {
-          console.log('fechou')
-        }}
+        title={alertOptions.title ?? ''}
+        message={alertOptions.message ?? ''}
+        open={alertOptions.open}
+        onClose={handleAlertClose}
       />
 
       <ReactSound url="/sounds/alert.mp3" playStatus={playerState} />

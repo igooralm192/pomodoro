@@ -1,25 +1,30 @@
 .alert-container {
-  position: fixed;
   width: 100%;
   height: 100%;
+  padding-top: 20px;
+
+  position: fixed;
   left: 0;
-  top: 0;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  // justify-content: center;
-  padding-top: 20px;
+
+  animation-duration: .3s;
+  animation-timing-function: ease-in-out;
+  transition: all .3s ease-in-out;
 }
 
 .alert-content {
   width: 400px;
   height: auto;
-  background-color: white;
   padding: 15px 15px;
+
   display: flex;
-  border: 2px solid #E6A23C;
+  border: 2px solid #e6a23c;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
   & > .icon > img {
     width: 40px;
@@ -48,7 +53,7 @@
     font-weight: bold;
     margin-top: -2px;
     margin-bottom: 10px;
-    color: #E6A23C;
+    color: #e6a23c;
   }
 }
 
@@ -63,3 +68,22 @@
     }
   }
 }
+
+@keyframes show {
+  from {
+    top: -300px;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@keyframes hide {
+  from {
+    top: 0;
+  }
+  to {
+    top: -400px;
+  }
+}
+
