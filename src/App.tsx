@@ -198,7 +198,7 @@ const App: React.FC = () => {
     return `${parsedMinute}:${parsedSecond}`
   }, [currentTime, workingTime])
 
-  function handleAlertOpen() {
+  function handleAlertOpen(sessionState: SessionState) {
     const title =
       sessionState === SessionState.WORKING
         ? 'Vai descansar!'
@@ -231,8 +231,8 @@ const App: React.FC = () => {
   useEffect(() => {
     if (timerState !== TimerState.FINISHED) return
 
-    handleAlertOpen()
-  }, [timerState])
+    handleAlertOpen(sessionState)
+  }, [timerState, sessionState])
 
   console.log(timerState, sessionState, sessionNumber, currentTime)
 

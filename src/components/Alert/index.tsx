@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import Alarm from '../../assets/images/alarm.svg'
@@ -18,45 +18,36 @@ const ALERT_TIME = 60000
 const Alert: React.FC<IProps> = ({ title, message, open, onClose }) => {
   const alertRef = useRef<HTMLDivElement>(null)
 
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>()
-
   function animateHideAlert() {
     if (!alertRef) return
     if (!alertRef.current) return
 
-    alertRef.current.style.animationName = 'hide'
-    alertRef.current.style.top = '-300px'
-    alertRef.current.style.visibility = 'hidden'
+    alertRef.current.classList.remove('active-alert')
   }
 
   function animateShowAlert() {
     if (!alertRef) return
     if (!alertRef.current) return
 
-    alertRef.current.style.animationName = 'show'
-    alertRef.current.style.top = '0px'
-    alertRef.current.style.visibility = 'visible'
+    alertRef.current.classList.add('active-alert')
   }
 
-  function handleClose() {
-    if (timeoutId) clearTimeout(timeoutId)
-
+  const handleClose = useCallback(() => {
     animateHideAlert()
-
     onClose()
-  }
+  }, [onClose])
 
   useEffect(() => {
-    if (timeoutId) clearTimeout(timeoutId)
+    let timeout: NodeJS.Timeout
 
     if (open === true) {
       animateShowAlert()
 
-      const timeout = setTimeout(handleClose, ALERT_TIME)
-
-      setTimeoutId(timeout)
+      timeout = setTimeout(handleClose, ALERT_TIME)
     }
-  }, [open])
+
+    return () => clearTimeout(timeout)
+  }, [open, handleClose])
 
   return (
     <div className="alert-container" ref={alertRef}>

@@ -4,7 +4,9 @@
   padding-top: 20px;
 
   position: fixed;
+  top: -300px;
   left: 0;
+  visibility: hidden;
 
   display: flex;
   flex-direction: column;
@@ -69,21 +71,7 @@
   }
 }
 
-@keyframes show {
-  from {
-    top: -300px;
-  }
-  to {
-    top: 0;
-  }
+.active-alert {
+  top: 0;
+  visibility: visible;
 }
-
-@keyframes hide {
-  from {
-    top: 0;
-  }
-  to {
-    top: -400px;
-  }
-}
-
