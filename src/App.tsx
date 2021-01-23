@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactSound from 'react-sound'
 
-import Logo from './assets/images/logo.svg'
-import Play from './assets/images/play.svg'
-import Pause from './assets/images/pause.svg'
-import Stop from './assets/images/stop.svg'
-import Reset from './assets/images/reset.svg'
+import './App.scss'
 
-import IconButton from './components/IconButton'
+import Logo from './assets/images/logo.svg'
+import Pause from './assets/images/pause.svg'
+import Play from './assets/images/play.svg'
+import Reset from './assets/images/reset.svg'
+import Stop from './assets/images/stop.svg'
+
 import Alert from './components/Alert'
+import IconButton from './components/IconButton'
 
 import useTimer, { TimerState } from './hooks/useTimer'
 import formatNumberToString from './utils/formatNumberToString'
-
-import './App.scss'
 
 enum SessionState {
   WORKING = 'WORKING',
@@ -52,8 +52,6 @@ const App: React.FC = () => {
   )
 
   const [sessionNumber, setSessionNumber] = useState<number>(1)
-
-  // const [play, { isPlaying, stop }] = useSound('/sounds/alert.mp3')
 
   const [playerState, setPlayerState] = useState<PlayerState>(
     PlayerState.STOPPED,
@@ -198,7 +196,7 @@ const App: React.FC = () => {
     return `${parsedMinute}:${parsedSecond}`
   }, [currentTime, workingTime])
 
-  function handleAlertOpen(sessionState: SessionState) {
+  const handleAlertOpen = useCallback(() => {
     const title =
       sessionState === SessionState.WORKING
         ? 'Vai descansar!'
@@ -211,9 +209,9 @@ const App: React.FC = () => {
 
     setPlayerState(PlayerState.PLAYING)
     setAlertOptions({ open: true, title, message })
-  }
+  }, [sessionState])
 
-  function handleAlertClose() {
+  const handleAlertClose = useCallback(() => {
     setPlayerState(PlayerState.STOPPED)
     setAlertOptions({ ...alertOptions, open: false })
 
@@ -226,13 +224,18 @@ const App: React.FC = () => {
         changeToWorkingSession()
         break
     }
-  }
+  }, [
+    alertOptions,
+    sessionState,
+    changeToBreakingSession,
+    changeToWorkingSession,
+  ])
 
   useEffect(() => {
     if (timerState !== TimerState.FINISHED) return
 
-    handleAlertOpen(sessionState)
-  }, [timerState, sessionState])
+    handleAlertOpen()
+  }, [timerState, handleAlertOpen])
 
   console.log(timerState, sessionState, sessionNumber, currentTime)
 
@@ -267,9 +270,7 @@ const App: React.FC = () => {
         <form id="inputs-container">
           <fieldset className="input-container">
             <label htmlFor="working-input">
-              Trabalho:&nbsp;
-              {workingTime}
-              &nbsp;minutos
+              {`Trabalho: ${workingTime} minutos`}
             </label>
             <input
               id="working-input"
@@ -284,9 +285,7 @@ const App: React.FC = () => {
 
           <fieldset className="input-container">
             <label htmlFor="breaking-input">
-              Descanso:&nbsp;
-              {breakingTime}
-              &nbsp;minutos
+              {`Descanso: ${breakingTime} minutos`}
             </label>
             <input
               id="breaking-input"

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
+import './styles.scss'
+
 import Alarm from '../../assets/images/alarm.svg'
 import Close from '../../assets/images/close.svg'
-
-import './styles.scss'
 
 interface IProps {
   title: string

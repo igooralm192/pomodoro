@@ -16,7 +16,7 @@
 #### Requisitos não-funcionais
 - [ ] Criar componente **CircularProgressBar** para a barra de progresso do cronômetro.
 - [ ] Criar componente **SliderInput** para os campos de entrada dos tempos de trabalho e descanso.
-- [ ] Criar componente **Alert** para visualização de mensagens de alerta.
+- [x] Criar componente **Alert** para visualização de mensagens de alerta.
 
 #### Regras de negócio
 - [x] Quando parado o cronômetro, o usuário reinicia somente a sessão atual.
@@ -25,7 +25,7 @@
 - [x] Na quarta sessão, o tempo de descanso deve ser o dobro do escolhido.
 - [x] Após a quarta sessão, o cronômetro deve ser resetado.
 - [x] O usuário não pode pausar o cronômetro durante a sessão de descanso.
-- [ ] O usuário só pode ouvir o som de alerta após o fim da sessão de trabalho ou descanso.
+- [x] O usuário só pode ouvir o som de alerta após o fim da sessão de trabalho ou descanso.
 - [x] `Y <= X`
 - [x] `5 < X <= 60`
 - [x] `1 < Y <= 20`
