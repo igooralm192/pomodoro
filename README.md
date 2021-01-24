@@ -36,6 +36,7 @@
 - [:computer: Demo](#computer-demo)
 - [:rocket: Tecnologias](#rocket-tecnologias)
 - [:book: O que aprendi](#book-o-que-aprendi)
+- [:sparkles: O que falta](#sparkles-o-que-falta)
 - [:recycle: Como contribuir](#recycle-como-contribuir)
 - [:memo: Licença](#memo-licença)
 
@@ -115,9 +116,11 @@ Com o `useRef`, foi possível capturar a referência de elementos HTML.
 ```tsx
 const alertRef = useRef<HTMLDivElement>(null)
 //...
-<div className="alert-container" ref={alertRef}>
-{/* ... */}
-</div>
+return (
+  <div className="alert-container" ref={alertRef}>
+  {/* ... */}
+  </div>
+)
 ```
 Dessa forma, pode-se acessar o DOM deste elemento usando `alertRef.current`.
 ```tsx
@@ -128,6 +131,17 @@ function animateShowAlert() {
   alertRef.current.classList.add('active-alert')
 }
 ```
+
+<a id="o-que-falta"></a>
+
+## :sparkles: O que falta
+
+- [x] Reproduzir som a cada fim de sessão
+- [x] Componente para visualizar alertas
+- [ ] Componente para barra de progresso circular
+- [ ] Componente para campo de entrada do tipo Slider
+
+
 <a id="como-contribuir"></a>
 
 ## :recycle: Como contribuir
