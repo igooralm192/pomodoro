@@ -11,7 +11,7 @@
 - [x] O usuário deve poder iniciar, pausar ou parar o cronômetro.
 - [x] O usuário deve poder visualizar a sessão atual, o tipo e o número total de sessões.
 - [x] O usuário também deve poder resetar o cronômetro.
-- [ ] O usuário deve poder ouvir um som de alerta no final de cada sessão.
+- [x] O usuário deve poder ouvir um som de alerta no final de cada sessão.
 
 #### Requisitos não-funcionais
 - [ ] Criar componente **CircularProgressBar** para a barra de progresso do cronômetro.

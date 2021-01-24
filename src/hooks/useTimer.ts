@@ -21,7 +21,7 @@ interface IReturn {
   stopTimer: () => void
 }
 
-const INTERVAL_TIME = 50
+const INTERVAL_TIME = 1000
 
 const useTimer = (): IReturn => {
   const [time, setTime] = useState<Time>()

@@ -1,46 +1,101 @@
-# Getting Started with Create React App
+<!-- Logo -->
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<p align="center">
+  <img alt="Project Logo" width="450px" src="./.github/logo.svg" />
+<p>
 
-## Available Scripts
+<!-- Badges -->
 
-In the project directory, you can run:
+<p align="center">
+  <img alt="React" src="https://img.shields.io/badge/react%20-%2320232a.svg?&style=for-the-badge&logo=react"/>
+  <img alt="JavaScript" src="https://img.shields.io/badge/typescript%20-%23323330.svg?style=for-the-badge&logo=typescript"/>
+  <img alt="Figma" src="https://img.shields.io/badge/figma%20-%23F24E1E.svg?&style=for-the-badge&logo=figma&logoColor=white"/>
+</p>
 
-### `yarn start`
+<!-- Description -->
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<h4 align="center">
+	🚀 Aplicação que te permite desfrutar do pomodoro! 💥
+</h4>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<!-- Project Design -->
 
-### `yarn test`
+<p align="center">
+  <img alt="Project Design 1" width="200px" src="./.github/design-1.jpg" />
+  <img alt="Project Design 2" width="200px" src="./.github/design-2.jpg" />
+  <img alt="Project Design 3" width="200px" src="./.github/design-3.jpg" />
+  <img alt="Project Design 4" width="200px" src="./.github/design-4.jpg" />
+<p>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<!-- Summary -->
 
-### `yarn build`
+<h2>Índice</h2>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [:bookmark: Sobre](#bookmark-sobre)
+- [:framed_picture: Layout](#framed_picture-layout)
+- [:computer: Demo](#computer-demo)
+- [:rocket: Tecnologias](#rocket-tecnologias)
+- [:book: O que aprendi](#book-o-que-aprendi)
+- [:recycle: Como contribuir](#recycle-como-contribuir)
+- [:memo: Licença](#memo-licença)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<a id="sobre"></a>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## :bookmark: Sobre
 
-### `yarn eject`
+A Técnica Pomodoro é um método de gerenciamento de tempo desenvolvido por Francesco Cirillo no final dos anos 1980.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+A técnica usa um cronômetro para dividir o trabalho em intervalos, tradicionalmente de 25 minutos de duração, separados por intervalos curtos - 5 minutos.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Nesta aplicação, além de cronometrar as suas sessões de trabalho/descanso, pode-se personalizar quanto tempo haverá em tais sessões.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<a id="layout"></a>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## :framed_picture: Layout
 
-## Learn More
+O layout desta aplicação está disponível no [Figma](https://www.figma.com/file/7u1JrbxEDbY72ZF6bYsX9N/Pomodoro-App?node-id=0%3A1).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<a id="demo"></a>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## :computer: Demo
+
+Essa aplicação foi hospedada pelo [Netlify](https://www.netlify.com/) e pode ser encontrada aqui: [Pomodoro](https://pomodoro-iguzinho.netlify.app/).
+
+<a id="tecnologias"></a>
+
+## :rocket: Tecnologias
+
+Essa aplicação se utiliza das seguintes tecnologias:
+
+-  [TypeScript](https://www.typescriptlang.org/)
+-  [ReactJS](https://reactjs.org/)
+-  [ESLint](https://eslint.org/) (Padronização de código)
+-  [Prettier](https://prettier.io/) (Formatação de código)
+-  [Sass](https://sass-lang.com/) (Pré-processador CSS)
+-  [React Sound](https://github.com/leoasis/react-sound) (Reprodução de áudios)
+
+<a id="o-que-aprendi"></a>
+
+## :book: O que aprendi
+
+
+<a id="como-contribuir"></a>
+
+## :recycle: Como contribuir
+
+- Crie um fork desse repositório,
+- Crie uma branch com o nome da sua feature: `git checkout -b my-feature`
+- Faça um commit das suas alterações: `git commit -m 'feat: My new feature'`
+- Faça um push da sua branch: `git push origin my-feature`
+
+
+<a id="licenca"></a>
+
+## :memo: Licença
+
+Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+<p align="center">
+  Feito com ❤️ por <a href="https://github.com/igooralm192" target="_blank">Igor Almeida</a>!!
+</p>
