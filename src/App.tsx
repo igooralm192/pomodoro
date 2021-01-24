@@ -237,7 +237,7 @@ const App: React.FC = () => {
     handleAlertOpen()
   }, [timerState, handleAlertOpen])
 
-  console.log(timerState, sessionState, sessionNumber, currentTime)
+  // console.log(timerState, sessionState, sessionNumber, currentTime)
 
   return (
     <main id="main-container">
