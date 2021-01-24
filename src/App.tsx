@@ -1,20 +1,35 @@
 import React, { useCallback, useEffect, useState } from 'react'
-
-import Logo from './assets/logo.svg'
-import Play from './assets/play.svg'
-import Pause from './assets/pause.svg'
-import Stop from './assets/stop.svg'
-import Reset from './assets/reset.svg'
-
-import IconButton from './components/IconButton'
-import useTimer, { TimerState } from './hooks/useTimer'
-import formatNumberToString from './utils/formatNumberToString'
+import ReactSound from 'react-sound'
 
 import './App.scss'
+
+import Logo from './assets/images/logo.svg'
+import Pause from './assets/images/pause.svg'
+import Play from './assets/images/play.svg'
+import Reset from './assets/images/reset.svg'
+import Stop from './assets/images/stop.svg'
+
+import Alert from './components/Alert'
+import IconButton from './components/IconButton'
+
+import useTimer, { TimerState } from './hooks/useTimer'
+import formatNumberToString from './utils/formatNumberToString'
 
 enum SessionState {
   WORKING = 'WORKING',
   BREAKING = 'BREAKING',
+}
+
+enum PlayerState {
+  PLAYING = 'PLAYING',
+  STOPPED = 'STOPPED',
+  PAUSED = 'PAUSED',
+}
+
+interface AlertOptions {
+  open: boolean
+  title?: string
+  message?: string
 }
 
 const TOTAL_SESSIONS = 4
@@ -37,6 +52,14 @@ const App: React.FC = () => {
   )
 
   const [sessionNumber, setSessionNumber] = useState<number>(1)
+
+  const [playerState, setPlayerState] = useState<PlayerState>(
+    PlayerState.STOPPED,
+  )
+
+  const [alertOptions, setAlertOptions] = useState<AlertOptions>({
+    open: false,
+  })
 
   function handleWorkingTime(value: number) {
     setWorkingTime(value)
@@ -73,6 +96,36 @@ const App: React.FC = () => {
     setSessionNumber(1)
     stopTimer()
   }, [stopTimer])
+
+  const changeToWorkingSession = useCallback(() => {
+    if (sessionNumber === TOTAL_SESSIONS) {
+      handleReset()
+
+      return
+    }
+
+    setSessionState(SessionState.WORKING)
+    setSessionNumber(oldSessionNumber => oldSessionNumber + 1)
+
+    startTimer({
+      minute: workingTime,
+      second: 0,
+    })
+  }, [workingTime, sessionNumber, handleReset, startTimer])
+
+  const changeToBreakingSession = useCallback(() => {
+    setSessionState(SessionState.BREAKING)
+
+    let newBreakingTime = breakingTime
+    if (sessionNumber === 4) {
+      newBreakingTime *= 2
+    }
+
+    startTimer({
+      minute: newBreakingTime,
+      second: 0,
+    })
+  }, [breakingTime, sessionNumber, startTimer])
 
   const renderActions = useCallback(() => {
     const playButton = (
@@ -143,57 +196,46 @@ const App: React.FC = () => {
     return `${parsedMinute}:${parsedSecond}`
   }, [currentTime, workingTime])
 
-  useEffect(() => {
-    if (!currentTime) return
-    if (currentTime.minute !== 0 || currentTime.second !== 0) return
+  const handleAlertOpen = useCallback(() => {
+    const title =
+      sessionState === SessionState.WORKING
+        ? 'Vai descansar!'
+        : 'Hora de trabalhar!'
+
+    const message =
+      sessionState === SessionState.WORKING
+        ? 'Já ta na hora de descansar.'
+        : 'Já ta na hora de trabalhar.'
+
+    setPlayerState(PlayerState.PLAYING)
+    setAlertOptions({ open: true, title, message })
+  }, [sessionState])
+
+  const handleAlertClose = useCallback(() => {
+    setPlayerState(PlayerState.STOPPED)
+    setAlertOptions({ ...alertOptions, open: false })
 
     switch (sessionState) {
-      case SessionState.WORKING: {
-        setSessionState(SessionState.BREAKING)
-        stopTimer()
-
-        let newBreakingTime = breakingTime
-        if (sessionNumber === 4) {
-          newBreakingTime *= 2
-        }
-
-        startTimer({
-          minute: newBreakingTime,
-          second: 0,
-        })
-
+      case SessionState.WORKING:
+        changeToBreakingSession()
         break
-      }
 
-      default: {
-        if (sessionNumber === TOTAL_SESSIONS) {
-          handleReset()
-
-          return
-        }
-
-        setSessionState(SessionState.WORKING)
-        setSessionNumber(oldSessionNumber => oldSessionNumber + 1)
-
-        stopTimer()
-        startTimer({
-          minute: workingTime,
-          second: 0,
-        })
-
+      default:
+        changeToWorkingSession()
         break
-      }
     }
   }, [
-    currentTime,
-    workingTime,
-    breakingTime,
-    startTimer,
-    stopTimer,
+    alertOptions,
     sessionState,
-    sessionNumber,
-    handleReset,
+    changeToBreakingSession,
+    changeToWorkingSession,
   ])
+
+  useEffect(() => {
+    if (timerState !== TimerState.FINISHED) return
+
+    handleAlertOpen()
+  }, [timerState, handleAlertOpen])
 
   console.log(timerState, sessionState, sessionNumber, currentTime)
 
@@ -228,9 +270,7 @@ const App: React.FC = () => {
         <form id="inputs-container">
           <fieldset className="input-container">
             <label htmlFor="working-input">
-              Trabalho:&nbsp;
-              {workingTime}
-              &nbsp;minutos
+              {`Trabalho: ${workingTime} minutos`}
             </label>
             <input
               id="working-input"
@@ -245,9 +285,7 @@ const App: React.FC = () => {
 
           <fieldset className="input-container">
             <label htmlFor="breaking-input">
-              Descanso:&nbsp;
-              {breakingTime}
-              &nbsp;minutos
+              {`Descanso: ${breakingTime} minutos`}
             </label>
             <input
               id="breaking-input"
@@ -261,6 +299,15 @@ const App: React.FC = () => {
           </fieldset>
         </form>
       </div>
+
+      <Alert
+        title={alertOptions.title ?? ''}
+        message={alertOptions.message ?? ''}
+        open={alertOptions.open}
+        onClose={handleAlertClose}
+      />
+
+      <ReactSound url="/sounds/alert.mp3" playStatus={playerState} />
     </main>
   )
 }
